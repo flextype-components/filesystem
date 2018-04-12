@@ -4,7 +4,7 @@
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/flextype-components/filesystem",
-  "description": "Simple Http Component",
+  "description": "Filesystem component contains methods that assist in working with files and directories.",
   "authors": [
     {
         "name": "Sergey Romanenko",
