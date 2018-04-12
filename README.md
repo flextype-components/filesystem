@@ -1,130 +1,140 @@
-# FileSystem
-File and Dir class contains methods that assist in working with files and directories.
+# Filesystem Component
+![version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg?style=flat-square "Version")
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/flextype-components/filesystem/blob/master/LICENSE)
 
-## File
+Filesystem component contains methods that assist in working with files and directories.
 
-### Returns true if the File exists.
+### Installation
+
+```
+composer require flextype-components/filesystem
+```
+
+### Usage
+
 ```php
-if (File::exists('filename.txt')) {
+use Flextype\Component\Filesystem\Filesystem;
+```
+
+Returns true if the File exists.
+```php
+if (Filesystem::fileExists('filename.txt')) {
   // Do something...
 }
 ```
 
-### Delete file
+Delete file
 ```php
-File::delete('filename.txt');
+Filesystem::deleteFile('filename.txt');
 ```
 
-### Rename file
+Rename file
 ```php
-File::rename('filename1.txt', 'filename2.txt');
+Filesystem::renameFile('filename1.txt', 'filename2.txt');
 ```
 
-### Copy file
+Copy file
 ```php
-File::copy('folder1/filename.txt', 'folder2/filename.txt');
+Filesystem::copyFile('folder1/filename.txt', 'folder2/filename.txt');
 ```
 
-### Get the File extension.
+Get the File extension.
 ```php
-echo File::ext('filename.txt');
+echo Filesystem::fileExt('filename.txt');
 ```
 
-### Get the File name
+Get the File name
 ```php
-echo File::name('filename.txt');
+echo Filesystem::filename('filename.txt');
 ```
 
-### Get list of files in directory recursive
+Get list of files in directory recursive
 ```php
-$files = File::scan('folder');
-$files = File::scan('folder', 'txt');
-$files = File::scan('folder', array('txt', 'log'));
-$files = File::scan('folder', array('txt', 'log'), false);
+$files = Filesystem::getFilesList('folder');
+$files = Filesystem::getFilesList('folder', 'txt');
+$files = Filesystem::getFilesList('folder', array('txt', 'log'));
 ```
 
-### Fetch the content from a file or URL.
+Fetch the content from a file or URL.
 ```php
-echo File::getContent('filename.txt');
+echo Filesystem::getFileContent('filename.txt');
 ```
 
-### Writes a string to a file.
+Writes a string to a file.
 ```php
-File::setContent('filename.txt', 'Content ...');
+Filesystem::setFileContent('filename.txt', 'Content ...');
 ```
 
-### Get time(in Unix timestamp) the file was last changed
+Get time(in Unix timestamp) the file was last changed
 ```php
-echo File::lastChange('filename.txt');
+echo Filesystem::getFileLastChange('filename.txt');
 ```
 
-### Get last access time
+Get last access time
 ```php
-echo File::lastAccess('filename.txt');
+echo Filesystem::getFileLastAccess('filename.txt');
 ```
 
-### Returns the mime type of a file.
+Returns the mime type of a file.
 ```php
-echo File::mime('filename.txt');
+echo Filesystem::getFileMimeType('filename.txt');
 ```
 
-### Forces a file to be downloaded.
+Forces a file to be downloaded.
 ```php
-File::download('filename.txt');
+Filesystem::downloadFile('filename.txt');
 ```
 
-### Display a file in the browser.
+Display a file in the browser.
 ```php
-File::display('filename.txt');
+Filesystem::displayFile('filename.txt');
 ```
 
-### Tests whether a file is writable for anyone.
+Tests whether a file is writable for anyone.
 ```php
-if (File::writable('filename.txt')) {
+if (Filesystem::isFileWritable('filename.txt')) {
   // do something...
 }
 ```
 
-## Dir
-
-### Creates a directory
+Creates a directory
 ```php
-Dir::create('folder1');
+Filesystem::createDir('folder1');
 ```
 
-### Checks if this directory exists.
+Checks if this directory exists.
 ```php
-if (Dir::exists('folder1')) {
+if (Filesystem::dirExists('folder1')) {
   // Do something...
 }
 ```  
 
-### Check dir permission
+Check dir permission
 ```php
-$dir_perm = Dir::checkPerm('folder1');
+echo Filesystem::checkDirPerm('folder1');
 ```
 
-### Delete directory
+Delete directory
 ```php
-Dir::delete('folder1');
+Filesystem::deleteDir('folder1');
 ```
 
-### Get list of directories
+Get list of directories
 ```php
-$dirs = Dir::scan('folders');
+$dirs = Filesystem::getDirList('folders');
 ```
 
-### Check if a directory is writable.
+Check if a directory is writable.
 ```php
-if (Dir::writable('folder1')) {
+if (Filesystem::isDirWritable('folder1')) {
   // Do something...
 }
 ```
 
-### Get directory size.
+Get directory size.
 ```php
-echo Dir::size('folder1');
+echo Filesystem::getDirSize('folder1');
 ```
 
 ## License
-See [LICENSE](https://github.com/force-components/FileSystem/blob/master/LICENSE)
+See [LICENSE](https://github.com/flextype-components/filesystem/blob/master/LICENSE)

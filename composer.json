@@ -1,25 +1,23 @@
 {
-  "name": "force/filesystem",
-  "keywords": ["filesystem", "file", "dir", "force"],
+  "name": "flextype-components/filesystem",
+  "keywords": ["file", "dir", "filesystem"],
+  "type": "library",
   "license": "MIT",
-  "homepage": "https://github.com/force-components/FileSystem/issues",
-  "description": "File and Dir class contains methods that assist in working with files and directories.",
+  "homepage": "https://github.com/flextype-components/filesystem",
+  "description": "Simple Http Component",
   "authors": [
     {
         "name": "Sergey Romanenko",
-        "email": "awilum@msn.com"
+        "email": "awilum@yandex.ru"
     }
   ],
   "support": {
-    "issues": "https://github.com/force-components/FileSystem/issues"
-  },
-  "autoload": {
-    "files": [
-      "File.php",
-      "Dir.php"
-    ]
+    "issues": "https://github.com/flextype-components/filesystem/issues"
   },
   "require": {
-    "php": ">=5.3.0"
+      "php": "^7.1.3"
+  },
+  "autoload": {
+      "psr-4": { "Flextype\\Component\\Filesystem\\": "" }
   }
 }

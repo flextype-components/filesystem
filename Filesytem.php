@@ -1,22 +1,25 @@
 <?php
 
- /**
-  * This file is part of the Force Components.
-  *
-  * (c) Romanenko Sergey / Awilum <awilum@msn.com>
-  *
-  * For the full copyright and license information, please view the LICENSE
-  * file that was distributed with this source code.
-  */
+/**
+ * @package Flextype Components
+ *
+ * @author Sergey Romanenko <awilum@yandex.ru>
+ * @link http://components.flextype.org
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-class File
+namespace Flextype\Component\Filesystem;
+
+class Filesystem
 {
     /**
      * Mime type list
      *
      * @var array
      */
-    public static $mime_types = array(
+    public static $mime_types = [
         'aac'        => 'audio/aac',
         'atom'       => 'application/atom+xml',
         'avi'        => 'video/avi',
@@ -78,50 +81,32 @@ class File
         'xls'        => 'application/vnd.ms-excel',
         'xml'        => 'text/xml',
         'zip'        => 'application/zip',
-    );
-
-    /**
-     * Protected constructor since this is a static class.
-     *
-     * @access  protected
-     */
-    protected function __construct()
-    {
-        // Nothing here
-    }
+    ];
 
     /**
      * Returns true if the File exists.
      *
-     *  <code>
-     *      if (File::exists('filename.txt')) {
-     *          // Do something...
-     *      }
-     *  </code>
+     * if (Filesystem::fileExists('filename.txt')) {
+     *     // Do something...
+     * }
      *
      * @param  string  $filename The file name
-     * @return boolean
+     * @return bool
      */
-    public static function exists($filename)
+    public static function fileExists(string $filename) : bool
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
-        // Return
         return (file_exists($filename) && is_file($filename));
     }
 
     /**
      * Delete file
      *
-     *  <code>
-     *      File::delete('filename.txt');
-     *  </code>
+     * Filesystem::deleteFile('filename.txt');
      *
-     * @param  mixed   $filename The file name or array of files
-     * @return boolean
+     * @param  mixed $filename The file name or array of files
+     * @return bool
      */
-    public static function delete($filename)
+    public static function deleteFile($filename) : bool
     {
         // Is array
         if (is_array($filename)) {
@@ -139,22 +124,17 @@ class File
     /**
      * Rename file
      *
-     *  <code>
-     *      File::rename('filename1.txt', 'filename2.txt');
-     *  </code>
+     * Filesystem::renameFile('filename1.txt', 'filename2.txt');
      *
      * @param  string  $from Original file location
      * @param  string  $to   Desitination location of the file
-     * @return boolean
+     * @return bool
      */
-    public static function rename($from, $to)
+    public static function renameFile(string $from, string $to) : bool
     {
-        // Redefine vars
-        $from = (string) $from;
-        $to   = (string) $to;
 
         // If file exists $to than rename it
-        if (! File::exists($to)) {
+        if (! Filesystem::fileExists($to)) {
             return rename($from, $to);
         }
 
@@ -165,22 +145,16 @@ class File
     /**
      * Copy file
      *
-     *  <code>
-     *      File::copy('folder1/filename.txt', 'folder2/filename.txt');
-     *  </code>
+     * Filesystem::copyFile('folder1/filename.txt', 'folder2/filename.txt');
      *
      * @param  string  $from Original file location
      * @param  string  $to   Desitination location of the file
-     * @return boolean
+     * @return bool
      */
-    public static function copy($from, $to)
+    public static function copy(string $from, string $to) : bool
     {
-        // Redefine vars
-        $from = (string) $from;
-        $to   = (string) $to;
-
         // If file !exists $from and exists $to then return false
-        if (! File::exists($from) || File::exists($to)) {
+        if (! Filesystem::fileExists($from) || Filesystem::fileExists($to)) {
             return false;
         }
 
@@ -191,18 +165,13 @@ class File
     /**
      * Get the File extension.
      *
-     *  <code>
-     *      echo File::ext('filename.txt');
-     *  </code>
+     * echo Filesystem::fileExt('filename.txt');
      *
      * @param  string $filename The file name
      * @return string
      */
-    public static function ext($filename)
+    public static function fileExt(string $filename) : string
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
         // Return file extension
         return substr(strrchr($filename, '.'), 1);
     }
@@ -210,37 +179,30 @@ class File
     /**
      * Get the File name
      *
-     *  <code>
-     *      echo File::name('filename.txt');
-     *  </code>
+     * echo Filesystem::filename('filename.txt');
      *
      * @param  string $filename The file name
      * @return string
      */
-    public static function name($filename)
+    public static function filename(string $filename) : string
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
         // Return filename
-        return basename($filename, '.'.File::ext($filename));
+        return basename($filename, '.'.Filesystem::fileExt($filename));
     }
 
     /**
      * Get list of files in directory recursive
      *
-     *  <code>
-     *      $files = File::scan('folder');
-     *      $files = File::scan('folder', 'txt');
-     *      $files = File::scan('folder', array('txt', 'log'));
-     *  </code>
+     * $files = Filesystem::getFilesList('folder');
+     * $files = Filesystem::getFilesList('folder', 'txt');
+     * $files = Filesystem::getFilesList('folder', array('txt', 'log'));
      *
      * @param  string $folder      Folder
      * @param  mixed  $type        Files types
      * @param  mixed  $file_path   Files path
-     * @return array
+     * @return mixed
      */
-    public static function scan($folder, $type = null, $file_path = true)
+    public static function getFilesList(string $folder, $type = null, $file_path = true)
     {
         $data = array();
         if (is_dir($folder)) {
@@ -287,20 +249,14 @@ class File
     /**
      * Fetch the content from a file or URL.
      *
-     *  <code>
-     *      echo File::getContent('filename.txt');
-     *  </code>
+     * echo Filesystem::getFileContent('filename.txt');
      *
      * @param  string  $filename The file name
-     * @return boolean
+     * @return mixed
      */
-    public static function getContent($filename)
+    public static function getFileContent(string $filename)
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
-        // If file exists load it
-        if (File::exists($filename)) {
+        if (Filesystem::fileExists($filename)) {
             return file_get_contents($filename);
         }
     }
@@ -308,28 +264,24 @@ class File
     /**
      * Writes a string to a file.
      *
+     * Filesystem::setFileContent('filename.txt', 'Content ...');
+     *
      * @param  string  $filename    The path of the file.
      * @param  string  $content     The content that should be written.
-     * @param  boolean $create_file Should the file be created if it doesn't exists?
-     * @param  boolean $append      Should the content be appended if the file already exists?
-     * @param  integer $chmod       Mode that should be applied on the file.
-     * @return boolean
+     * @param  bool    $create_file Should the file be created if it doesn't exists?
+     * @param  bool    $append      Should the content be appended if the file already exists?
+     * @param  int     $chmod       Mode that should be applied on the file.
+     * @return bool
      */
-    public static function setContent($filename, $content, $create_file = true, $append = false, $chmod = 0666)
+    public static function setFileContent(string $filename, string $content, bool $create_file = true, bool $append = false, $chmod = 0666) : bool
     {
-        // Redefine vars
-        $filename    = (string) $filename;
-        $content     = (string) $content;
-        $create_file = (bool) $create_file;
-        $append      = (bool) $append;
-
         // File may not be created, but it doesn't exist either
-        if (! $create_file && File::exists($filename)) {
+        if (! $create_file && Filesystem::fileExists($filename)) {
             throw new RuntimeException(vsprintf("%s(): The file '{$filename}' doesn't exist", array(__METHOD__)));
         }
 
         // Create directory recursively if needed
-        Dir::create(dirname($filename));
+        Filesystem::createDir(dirname($filename));
 
         // Create file & open for writing
         $handler = ($append) ? @fopen($filename, 'a') : @fopen($filename, 'w');
@@ -369,20 +321,15 @@ class File
     /**
      * Get time(in Unix timestamp) the file was last changed
      *
-     *  <code>
-     *      echo File::lastChange('filename.txt');
-     *  </code>
+     * echo Filesystem::getFileLastChange('filename.txt');
      *
      * @param  string  $filename The file name
-     * @return boolean
+     * @return mixed
      */
-    public static function lastChange($filename)
+    public static function getFileLastChange(string $filename)
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
         // If file exists return filemtime
-        if (File::exists($filename)) {
+        if (Filesystem::fileExists($filename)) {
             return filemtime($filename);
         }
 
@@ -393,20 +340,15 @@ class File
     /**
      * Get last access time
      *
-     *  <code>
-     *      echo File::lastAccess('filename.txt');
-     *  </code>
+     * echo Filesystem::getFileLastAccess('filename.txt');
      *
      * @param  string  $filename The file name
-     * @return boolean
+     * @return mixed
      */
-    public static function lastAccess($filename)
+    public static function getFileLastAccess(string $filename)
     {
-        // Redefine vars
-        $filename = (string) $filename;
-
         // If file exists return fileatime
-        if (File::exists($filename)) {
+        if (Filesystem::fileExists($filename)) {
             return fileatime($filename);
         }
 
@@ -417,20 +359,14 @@ class File
     /**
      * Returns the mime type of a file. Returns false if the mime type is not found.
      *
-     *  <code>
-     *      echo File::mime('filename.txt');
-     *  </code>
+     * echo Filesystem::getFileMimeType('filename.txt');
      *
      * @param  string  $file  Full path to the file
-     * @param  boolean $guess Set to false to disable mime type guessing
-     * @return string
+     * @param  bool    $guess Set to false to disable mime type guessing
+     * @return mixed
      */
-    public static function mime($file, $guess = true)
+    public static function getFileMimeType(string $file, bool $guess = true)
     {
-        // Redefine vars
-        $file  = (string) $file;
-        $guess = (bool) $guess;
-
         // Get mime using the file information functions
         if (function_exists('finfo_open')) {
             $info = finfo_open(FILEINFO_MIME_TYPE);
@@ -458,22 +394,18 @@ class File
     /**
      * Forces a file to be downloaded.
      *
-     *  <code>
-     *      File::download('filename.txt');
-     *  </code>
+     * Filesystem::downloadFile('filename.txt');
      *
      * @param string  $file         Full path to file
      * @param string  $content_type Content type of the file
      * @param string  $filename     Filename of the download
-     * @param integer $kbps         Max download speed in KiB/s
+     * @param int     $kbps         Max download speed in KiB/s
      */
-    public static function download($file, $content_type = null, $filename = null, $kbps = 0)
+    public static function downloadFile(string $file, $content_type = null, $filename = null, int $kbps = 0)
     {
         // Redefine vars
-        $file         = (string) $file;
         $content_type = ($content_type === null) ? null : (string) $content_type;
         $filename     = ($filename === null) ? null : (string) $filename;
-        $kbps         = (int) $kbps;
 
         // Check that the file exists and that its readable
         if (file_exists($file) === false || is_readable($file) === false) {
@@ -487,7 +419,7 @@ class File
 
         // Send headers
         if ($content_type === null) {
-            $content_type = File::mime($file);
+            $content_type = Filesystem::getFileMimeType($file);
         }
 
         if ($filename === null) {
@@ -525,18 +457,15 @@ class File
     /**
      * Display a file in the browser.
      *
-     *  <code>
-     *      File::display('filename.txt');
-     *  </code>
+     * Filesystem::displayFile('filename.txt');
      *
      * @param string $file         Full path to file
      * @param string $content_type Content type of the file
      * @param string $filename     Filename of the download
      */
-    public static function display($file, $content_type = null, $filename = null)
+    public static function displayFile(string $file, $content_type = null, $filename = null)
     {
         // Redefine vars
-        $file         = (string) $file;
         $content_type = ($content_type === null) ? null : (string) $content_type;
         $filename     = ($filename === null) ? null : (string) $filename;
 
@@ -552,7 +481,7 @@ class File
 
         // Send headers
         if ($content_type === null) {
-            $content_type = File::mime($file);
+            $content_type = Filesystem::getFileMimeType($file);
         }
 
         if ($filename === null) {
@@ -572,20 +501,15 @@ class File
     /**
      * Tests whether a file is writable for anyone.
      *
-     *  <code>
-     *      if (File::writable('filename.txt')) {
-     *          // do something...
-     *      }
-     *  </code>
+     * if (Filesystem::isFileWritable('filename.txt')) {
+     *     // do something...
+     * }
      *
      * @param  string  $file File to check
-     * @return boolean
+     * @return bool
      */
-    public static function writable($file)
+    public static function isFileWritable(string $file) : bool
     {
-        // Redefine vars
-        $file = (string) $file;
-
         // Is file exists ?
         if (! file_exists($file)) {
             throw new RuntimeException(vsprintf("%s(): The file '{$file}' doesn't exist", array(__METHOD__)));
@@ -598,5 +522,169 @@ class File
         if (is_writable($file) || ($perms & 0x0080) || ($perms & 0x0010) || ($perms & 0x0002)) {
             return true;
         }
+    }
+
+    /**
+     * Creates a directory
+     *
+     * Filesystem::createDir('folder1');
+     *
+     * @param  string  $dir   Name of directory to create
+     * @param  int     $chmod Chmod
+     * @return bool
+     */
+    public static function createDir(string $dir, $chmod = 0775) : bool
+    {
+        // Create new dir if $dir !exists
+        return (! Filesystem::dirExists($dir)) ? @mkdir($dir, $chmod, true) : true;
+    }
+
+    /**
+     * Checks if this directory exists.
+     *
+     * if (Filesystem::dirExists('folder1')) {
+     *     // Do something...
+     * }
+     *
+     * @param  string  $dir Full path of the directory to check.
+     * @return bool
+     */
+    public static function dirExists(string $dir) : bool
+    {
+        // Directory exists
+        if (file_exists($dir) && is_dir($dir)) {
+            return true;
+        }
+
+        // Doesn't exist
+        return false;
+    }
+
+
+    /**
+     * Check dir permission
+     *
+     * echo Filesystem::checkDirPerm('folder1');
+     *
+     * @param  string $dir Directory to check
+     * @return string
+     */
+    public static function checkDirPerm(string $dir) : string
+    {
+        // Clear stat cache
+        clearstatcache();
+
+        // Return perm
+        return substr(sprintf('%o', fileperms($dir)), -4);
+    }
+
+
+    /**
+     * Delete directory
+     *
+     * Filesystem::deleteDir('folder1');
+     *
+     * @param string $dir Name of directory to delete
+     */
+    public static function deleteDir(string $dir)
+    {
+        // Delete dir
+        if (is_dir($dir)) {
+            $ob = scandir($dir);
+            foreach ($ob as $o) {
+                if ($o != '.' && $o != '..') {
+                    if (filetype($dir.'/'.$o) == 'dir') {
+                        Filesystem::deleteDir($dir.'/'.$o);
+                    } else {
+                        unlink($dir.'/'.$o);
+                    }
+                }
+            }
+        }
+        reset($ob);
+        rmdir($dir);
+    }
+
+
+    /**
+     * Get list of directories
+     *
+     * $dirs = Filesystem::getDirList('folders');
+     *
+     * @param string $dir Directory
+     */
+    public static function getDirList(string $dir)
+    {
+        // Scan dir
+        if (is_dir($dir) && $dh = opendir($dir)) {
+            $f = array();
+            while ($fn=readdir($dh)) {
+                if ($fn != '.' && $fn != '..' && is_dir($dir.'/'.$fn)) {
+                    $f[] = $fn;
+                }
+            }
+            return $f;
+        }
+    }
+
+
+    /**
+     * Check if a directory is writable.
+     *
+     * if (Filesystem::isDirWritable('folder1')) {
+     *     // Do something...
+     * }
+     *
+     * @param  string $path The path to check.
+     * @return bool
+     */
+    public static function isDirWritable(string $path) : bool
+    {
+        // Create temporary file
+        $file = tempnam($path, 'writable');
+
+        // File has been created
+        if ($file !== false) {
+
+            // Remove temporary file
+            Filesystem::deleteFile($file);
+
+            //  Writable
+            return true;
+        }
+
+        // Else not writable
+        return false;
+    }
+
+
+    /**
+     * Get directory size.
+     *
+     * echo Filesystem::getDirSize('folder1');
+     *
+     * @param  string  $path The path to directory.
+     * @return int
+     */
+    public static function getDirSize(string $path) : int
+    {
+
+        $total_size = 0;
+        $files = scandir($path);
+        $clean_path = rtrim($path, '/') . '/';
+
+        foreach ($files as $t) {
+            if ($t <> "." && $t <> "..") {
+                $current_file = $clean_path . $t;
+                if (is_dir($current_file)) {
+                    $total_size += Filesystem::getDirSize($current_file);
+                } else {
+                    $total_size += filesize($current_file);
+                }
+            }
+        }
+
+        // Return total size
+        return $total_size;
     }
 }

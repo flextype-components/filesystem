@@ -1,3 +1,7 @@
+# v1.1.0, 2018-04-12
+* PHP7 Support added
+* New class Filesystem insted of Dir and File was added.
+
 # v1.0.3, 2015-11-03
 * Fixed bug in Dir::scan()
 
