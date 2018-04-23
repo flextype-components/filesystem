@@ -1,3 +1,6 @@
+# v1.1.1, 2018-04-23
+* Fix issue with RecursiveDirectoryIterator
+
 # v1.1.0, 2018-04-12
 * PHP7 Support added
 * New class Filesystem insted of Dir and File was added.
