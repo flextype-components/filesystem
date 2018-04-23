@@ -206,8 +206,8 @@ class Filesystem
     {
         $data = array();
         if (is_dir($folder)) {
-            $iterator = new RecursiveDirectoryIterator($folder);
-            foreach (new RecursiveIteratorIterator($iterator) as $file) {
+            $iterator = new \RecursiveDirectoryIterator($folder);
+            foreach (new \RecursiveIteratorIterator($iterator) as $file) {
                 if ($type !== null) {
                     if (is_array($type)) {
                         $file_ext = substr(strrchr($file->getFilename(), '.'), 1);
