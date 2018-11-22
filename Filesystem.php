@@ -84,6 +84,155 @@ class Filesystem
     ];
 
     /**
+     * Upload files on the Server with several type of Validations!
+     *
+     * Filesystem::uploadFile($_FILES['file'], $files_directory);
+     *
+     * @param   array   $file             Uploaded file data
+     * @param   string  $upload_directory Upload directory
+     * @param   array   $allowed          Allowed file extensions
+     * @param   int     $max_size         Max file size in bytes
+     * @param   string  $filename         New filename
+     * @param   bool    $remove_spaces    Remove spaces from the filename
+     * @param   int     $max_width        Maximum width of image
+     * @param   int     $max_height       Maximum height of image
+     * @param   bool    $exact            Match width and height exactly?
+     * @param   int     $chmod            Chmod mask
+     * @return  string  on success, full path to new file
+     * @return  false   on failure
+     */
+    public static function uploadFile(array $file,
+                                      string $upload_directory,
+                                      array $allowed = ['jpeg', 'png', 'gif', 'jpg'],
+                                      int $max_size = 3000000,
+                                      string $filename = NULL,
+                                      bool $remove_spaces = true,
+                                      int $max_width = NULL,
+                                      int $max_height = NULL,
+                                      bool $exact = false,
+                                      int $chmod = 0644)
+    {
+        //
+        // Tests if a successful upload has been made.
+        //
+        if (isset($file['error'])
+            AND isset($file['tmp_name'])
+            AND $file['error'] === UPLOAD_ERR_OK
+            AND is_uploaded_file($file['tmp_name'])) {
+
+                //
+                // Tests if upload data is valid, even if no file was uploaded.
+                //
+                if (isset($file['error'])
+                    AND isset($file['name'])
+                    AND isset($file['type'])
+                    AND isset($file['tmp_name'])
+                    AND isset($file['size'])) {
+
+                        //
+                        // Test if an uploaded file is an allowed file type, by extension.
+                        //
+                        if (in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $allowed)) {
+
+                            //
+                            // Validation rule to test if an uploaded file is allowed by file size.
+                            //
+                            if (($file['error'] != UPLOAD_ERR_INI_SIZE)
+                                  AND ($file['error'] == UPLOAD_ERR_OK)
+                                  AND ($file['size'] <= $max_size)) {
+
+                                //
+                                // Validation rule to test if an upload is an image and, optionally, is the correct size.
+                                //
+                                if (in_array(mime_content_type($file['tmp_name']), ['image/jpeg', 'image/jpg', 'image/png','image/gif'])) {
+                                    function validateImage($file, $max_width, $max_height, $exact)
+                                    {
+                                        try
+                                        {
+                                            // Get the width and height from the uploaded image
+                                            list($width, $height) = getimagesize($file['tmp_name']);
+                                        }
+                                        catch (ErrorException $e)
+                                        {
+                                            // Ignore read errors
+                                        }
+
+                                        if (empty($width) OR empty($height)) {
+                                            // Cannot get image size, cannot validate
+                                            return false;
+                                        }
+
+                                        if ( ! $max_width) {
+                                            // No limit, use the image width
+                                            $max_width = $width;
+                                        }
+
+                                        if ( ! $max_height) {
+                                            // No limit, use the image height
+                                            $max_height = $height;
+                                        }
+
+                                        if ($exact) {
+                                            // Check if dimensions match exactly
+                                            return ($width === $max_width AND $height === $max_height);
+                                        } else {
+                                            // Check if size is within maximum dimensions
+                                            return ($width <= $max_width AND $height <= $max_height);
+                                        }
+
+                                        return false;
+                                    }
+
+                                    if (validateImage($file, $max_width, $max_height, $exact) === false) {
+                                        return false;
+                                    }
+                                }
+
+                                if ( ! isset($file['tmp_name']) OR ! is_uploaded_file($file['tmp_name'])) {
+
+                                    // Ignore corrupted uploads
+                                    return false;
+                                }
+
+                                if ($filename === null) {
+
+                                    // Use the default filename, with a timestamp pre-pended
+                                    $filename = uniqid().$file['name'];
+                                }
+
+                                if ($remove_spaces === true) {
+
+                                    // Remove spaces from the filename
+                                    $filename = preg_replace('/\s+/u', '_', $filename);
+                                }
+
+                                if ( ! is_dir($upload_directory) OR ! is_writable(realpath($upload_directory)))   {
+                                    throw new \RuntimeException("Directory {$upload_directory} must be writable");
+                                }
+
+                                // Make the filename into a complete path
+                                $filename = realpath($upload_directory).DIRECTORY_SEPARATOR.$filename;
+
+                                if (move_uploaded_file($file['tmp_name'], $filename)) {
+                                    if ($chmod !== false) {
+
+                                    // Set permissions on filename
+                                    chmod($filename, $chmod);
+                                }
+
+                                    // Return new file path
+                                    return $filename;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+        return false;
+    }
+
+    /**
      * Returns true if the File exists.
      *
      * if (Filesystem::fileExists('filename.txt')) {
@@ -145,7 +294,7 @@ class Filesystem
     /**
      * Copy file
      *
-     * Filesystem::copyFile('folder1/filename.txt', 'folder2/filename.txt');
+     * Filesystem::copy('folder1/filename.txt', 'folder2/filename.txt');
      *
      * @param  string  $from Original file location
      * @param  string  $to   Desitination location of the file
