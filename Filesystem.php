@@ -101,133 +101,130 @@ class Filesystem
      * @return  string  on success, full path to new file
      * @return  false   on failure
      */
-    public static function uploadFile(array $file,
+    public static function uploadFile(
+        array $file,
                                       string $upload_directory,
                                       array $allowed = ['jpeg', 'png', 'gif', 'jpg'],
                                       int $max_size = 3000000,
-                                      string $filename = NULL,
+                                      string $filename = null,
                                       bool $remove_spaces = true,
-                                      int $max_width = NULL,
-                                      int $max_height = NULL,
+                                      int $max_width = null,
+                                      int $max_height = null,
                                       bool $exact = false,
-                                      int $chmod = 0644)
-    {
+                                      int $chmod = 0644
+    ) {
         //
         // Tests if a successful upload has been made.
         //
         if (isset($file['error'])
-            AND isset($file['tmp_name'])
-            AND $file['error'] === UPLOAD_ERR_OK
-            AND is_uploaded_file($file['tmp_name'])) {
+            and isset($file['tmp_name'])
+            and $file['error'] === UPLOAD_ERR_OK
+            and is_uploaded_file($file['tmp_name'])) {
 
                 //
-                // Tests if upload data is valid, even if no file was uploaded.
+            // Tests if upload data is valid, even if no file was uploaded.
+            //
+            if (isset($file['error'])
+                    and isset($file['name'])
+                    and isset($file['type'])
+                    and isset($file['tmp_name'])
+                    and isset($file['size'])) {
+
+                        //
+                // Test if an uploaded file is an allowed file type, by extension.
                 //
-                if (isset($file['error'])
-                    AND isset($file['name'])
-                    AND isset($file['type'])
-                    AND isset($file['tmp_name'])
-                    AND isset($file['size'])) {
-
-                        //
-                        // Test if an uploaded file is an allowed file type, by extension.
-                        //
-                        if (in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $allowed)) {
+                if (in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $allowed)) {
 
                             //
-                            // Validation rule to test if an uploaded file is allowed by file size.
-                            //
-                            if (($file['error'] != UPLOAD_ERR_INI_SIZE)
-                                  AND ($file['error'] == UPLOAD_ERR_OK)
-                                  AND ($file['size'] <= $max_size)) {
+                    // Validation rule to test if an uploaded file is allowed by file size.
+                    //
+                    if (($file['error'] != UPLOAD_ERR_INI_SIZE)
+                                  and ($file['error'] == UPLOAD_ERR_OK)
+                                  and ($file['size'] <= $max_size)) {
 
                                 //
-                                // Validation rule to test if an upload is an image and, optionally, is the correct size.
-                                //
-                                if (in_array(mime_content_type($file['tmp_name']), ['image/jpeg', 'image/jpg', 'image/png','image/gif'])) {
-                                    function validateImage($file, $max_width, $max_height, $exact)
-                                    {
-                                        try
-                                        {
-                                            // Get the width and height from the uploaded image
-                                            list($width, $height) = getimagesize($file['tmp_name']);
-                                        }
-                                        catch (ErrorException $e)
-                                        {
-                                            // Ignore read errors
-                                        }
-
-                                        if (empty($width) OR empty($height)) {
-                                            // Cannot get image size, cannot validate
-                                            return false;
-                                        }
-
-                                        if ( ! $max_width) {
-                                            // No limit, use the image width
-                                            $max_width = $width;
-                                        }
-
-                                        if ( ! $max_height) {
-                                            // No limit, use the image height
-                                            $max_height = $height;
-                                        }
-
-                                        if ($exact) {
-                                            // Check if dimensions match exactly
-                                            return ($width === $max_width AND $height === $max_height);
-                                        } else {
-                                            // Check if size is within maximum dimensions
-                                            return ($width <= $max_width AND $height <= $max_height);
-                                        }
-
-                                        return false;
-                                    }
-
-                                    if (validateImage($file, $max_width, $max_height, $exact) === false) {
-                                        return false;
-                                    }
+                        // Validation rule to test if an upload is an image and, optionally, is the correct size.
+                        //
+                        if (in_array(mime_content_type($file['tmp_name']), ['image/jpeg', 'image/jpg', 'image/png','image/gif'])) {
+                            function validateImage($file, $max_width, $max_height, $exact)
+                            {
+                                try {
+                                    // Get the width and height from the uploaded image
+                                    list($width, $height) = getimagesize($file['tmp_name']);
+                                } catch (ErrorException $e) {
+                                    // Ignore read errors
                                 }
 
-                                if ( ! isset($file['tmp_name']) OR ! is_uploaded_file($file['tmp_name'])) {
-
-                                    // Ignore corrupted uploads
+                                if (empty($width) or empty($height)) {
+                                    // Cannot get image size, cannot validate
                                     return false;
                                 }
 
-                                if ($filename === null) {
+                                if (! $max_width) {
+                                    // No limit, use the image width
+                                    $max_width = $width;
+                                }
+
+                                if (! $max_height) {
+                                    // No limit, use the image height
+                                    $max_height = $height;
+                                }
+
+                                if ($exact) {
+                                    // Check if dimensions match exactly
+                                    return ($width === $max_width and $height === $max_height);
+                                } else {
+                                    // Check if size is within maximum dimensions
+                                    return ($width <= $max_width and $height <= $max_height);
+                                }
+
+                                return false;
+                            }
+
+                            if (validateImage($file, $max_width, $max_height, $exact) === false) {
+                                return false;
+                            }
+                        }
+
+                        if (! isset($file['tmp_name']) or ! is_uploaded_file($file['tmp_name'])) {
+
+                                    // Ignore corrupted uploads
+                            return false;
+                        }
+
+                        if ($filename === null) {
 
                                     // Use the default filename, with a timestamp pre-pended
-                                    $filename = uniqid().$file['name'];
-                                }
+                            $filename = uniqid().$file['name'];
+                        }
 
-                                if ($remove_spaces === true) {
+                        if ($remove_spaces === true) {
 
                                     // Remove spaces from the filename
-                                    $filename = preg_replace('/\s+/u', '_', $filename);
-                                }
+                            $filename = preg_replace('/\s+/u', '_', $filename);
+                        }
 
-                                if ( ! is_dir($upload_directory) OR ! is_writable(realpath($upload_directory)))   {
-                                    throw new \RuntimeException("Directory {$upload_directory} must be writable");
-                                }
+                        if (! is_dir($upload_directory) or ! is_writable(realpath($upload_directory))) {
+                            throw new \RuntimeException("Directory {$upload_directory} must be writable");
+                        }
 
-                                // Make the filename into a complete path
-                                $filename = realpath($upload_directory).DIRECTORY_SEPARATOR.$filename;
+                        // Make the filename into a complete path
+                        $filename = realpath($upload_directory).DIRECTORY_SEPARATOR.$filename;
 
-                                if (move_uploaded_file($file['tmp_name'], $filename)) {
-                                    if ($chmod !== false) {
+                        if (move_uploaded_file($file['tmp_name'], $filename)) {
+                            if ($chmod !== false) {
 
                                     // Set permissions on filename
-                                    chmod($filename, $chmod);
-                                }
-
-                                    // Return new file path
-                                    return $filename;
-                                }
-
+                                chmod($filename, $chmod);
                             }
+
+                            // Return new file path
+                            return $filename;
                         }
                     }
                 }
+            }
+        }
 
         return false;
     }
@@ -309,6 +306,39 @@ class Filesystem
 
         // Else copy file
         return copy($from, $to);
+    }
+
+    /**
+     * Copy folders with files
+     *
+     * Filesystem::recursiveCopy('folder1', 'folder2');
+     *
+     * @param  string  $from Original folder location
+     * @param  string  $to   Desitination location of the folder
+     */
+    public static function recursiveCopy(string $from, string $to)
+    {
+        if (!file_exists($to)) {
+            mkdir($to);
+        }
+
+        $splFileInfoArr = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($from), \RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($splFileInfoArr as $fullPath => $splFileinfo) {
+            //skip . ..
+            if (in_array($splFileinfo->getBasename(), [".", ".."])) {
+                continue;
+            }
+
+            //get relative path of source file or folder
+            $path = str_replace($from, "", $splFileinfo->getPathname());
+
+            if ($splFileinfo->isDir()) {
+                mkdir($destination . "/" . $path);
+            } else {
+                copy($fullPath, $to . "/" . $path);
+            }
+        }
     }
 
     /**
@@ -394,6 +424,7 @@ class Filesystem
             return false;
         }
     }
+
 
     /**
      * Fetch the content from a file or URL.
@@ -817,7 +848,6 @@ class Filesystem
      */
     public static function getDirSize(string $path) : int
     {
-
         $total_size = 0;
         $files = scandir($path);
         $clean_path = rtrim($path, '/') . '/';

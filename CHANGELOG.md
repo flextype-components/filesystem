@@ -1,3 +1,6 @@
+# v1.1.3, 2018-12-01
+* Add new method recursiveCopy()
+
 # v1.1.2, 2018-11-22
 * Add new method uploadFile()
 
