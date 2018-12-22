@@ -1,3 +1,6 @@
+# v1.1.4, 2018-12-22
+* getFilesList() add ability to work with one level folders
+
 # v1.1.3, 2018-12-01
 * Add new method recursiveCopy()
 
