@@ -334,7 +334,7 @@ class Filesystem
             $path = str_replace($from, "", $splFileinfo->getPathname());
 
             if ($splFileinfo->isDir()) {
-                mkdir($destination . "/" . $path);
+                mkdir($to . "/" . $path);
             } else {
                 copy($fullPath, $to . "/" . $path);
             }
