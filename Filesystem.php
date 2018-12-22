@@ -374,57 +374,76 @@ class Filesystem
      *
      * $files = Filesystem::getFilesList('folder');
      * $files = Filesystem::getFilesList('folder', 'txt');
-     * $files = Filesystem::getFilesList('folder', array('txt', 'log'));
+     * $files = Filesystem::getFilesList('folder', array['txt', 'log']);
      *
      * @param  string $folder      Folder
      * @param  mixed  $type        Files types
-     * @param  mixed  $file_path   Files path
+     * @param  bool   $file_path   Files path
+     * @param  bool   $multilevel  Multilevel trees
      * @return mixed
      */
-    public static function getFilesList(string $folder, $type = null, $file_path = true)
-    {
-        $data = array();
-        if (is_dir($folder)) {
-            $iterator = new \RecursiveDirectoryIterator($folder);
-            foreach (new \RecursiveIteratorIterator($iterator) as $file) {
-                if ($type !== null) {
-                    if (is_array($type)) {
-                        $file_ext = substr(strrchr($file->getFilename(), '.'), 1);
-                        if (in_array($file_ext, $type)) {
-                            if (strpos($file->getFilename(), $file_ext, 1)) {
-                                if ($file_path) {
-                                    $data[] = $file->getPathName();
-                                } else {
-                                    $data[] = $file->getFilename();
-                                }
-                            }
-                        }
-                    } else {
-                        if (strpos($file->getFilename(), $type, 1)) {
-                            if ($file_path) {
-                                $data[] = $file->getPathName();
-                            } else {
-                                $data[] = $file->getFilename();
-                            }
-                        }
+     public static function getFilesList(string $folder, $type = null, bool $file_path = true, bool $multilevel = true)
+     {
+         $data = array();
+         if (is_dir($folder)) {
+
+             if ($multilevel) {
+                 //die('0');
+                 $iterator = new \RecursiveDirectoryIterator($folder);
+                 foreach (new \RecursiveIteratorIterator($iterator) as $file) {
+                     if ($type !== null) {
+                         if (is_array($type)) {
+                             $file_ext = substr(strrchr($file->getFilename(), '.'), 1);
+                             if (in_array($file_ext, $type)) {
+                                 if (strpos($file->getFilename(), $file_ext, 1)) {
+                                     if ($file_path) {
+                                         $data[] = $file->getPathName();
+                                     } else {
+                                         $data[] = $file->getFilename();
+                                     }
+                                 }
+                             }
+                         } else {
+                             if (strpos($file->getFilename(), $type, 1)) {
+                                 if ($file_path) {
+                                     $data[] = $file->getPathName();
+                                 } else {
+                                     $data[] = $file->getFilename();
+                                 }
+                             }
+                         }
+                     } else {
+                         if ($file->getFilename() !== '.' && $file->getFilename() !== '..') {
+                             if ($file_path) {
+                                 $data[] = $file->getPathName();
+                             } else {
+                                 $data[] = $file->getFilename();
+                             }
+                         }
+                     }
+                 }
+             } else {
+                // $data = glob($folder . '/*/*.html');
+                if (is_array($type)) {
+                    $ext = '';
+                    foreach ($type as $t) {
+                        $ext .= $t.",";
                     }
+                    $ext = substr_replace($ext, "", -1);
+                    $data = glob($folder . "/*/*.{{$ext}}", GLOB_BRACE);
+                    print_r($data);
+                } elseif ($type !== null) {
+                    $data = glob($folder . "/*/*.$type");
                 } else {
-                    if ($file->getFilename() !== '.' && $file->getFilename() !== '..') {
-                        if ($file_path) {
-                            $data[] = $file->getPathName();
-                        } else {
-                            $data[] = $file->getFilename();
-                        }
-                    }
+                    $data = glob($folder . "/*/*.*");
                 }
-            }
+             }
 
-            return $data;
-        } else {
-            return false;
-        }
-    }
-
+             return $data;
+         } else {
+             return false;
+         }
+     }
 
     /**
      * Fetch the content from a file or URL.
