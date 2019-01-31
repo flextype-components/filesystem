@@ -404,7 +404,7 @@ class Filesystem
     }
 
     /**
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return array
      */
     protected static function mapFileInfo(\SplFileInfo $file)
