@@ -5,10 +5,6 @@
 <a href="https://github.com/filesystem/filesystem">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
 </a>
-<a href="https://scrutinizer-ci.com/g/flextype-components/filesystem/?branch=master">
-<img src="https://scrutinizer-ci.com/g/flextype-components/filesystem/badges/quality-score.png?b=master">
-</a>
-
 [![Quality Score](https://img.shields.io/scrutinizer/g/flextype-components/filesystem.svg?branch=master)](https://scrutinizer-ci.com/g/flextype-components/filesystem?branch=master)
 
 
