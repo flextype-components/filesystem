@@ -111,7 +111,7 @@ class Filesystem
     {
         $result = [];
 
-        if ( ! is_dir($directory)) {
+        if (!is_dir($directory)) {
             return [];
         }
 
@@ -322,9 +322,9 @@ class Filesystem
                 $_path = str_replace($path, "", $splFileinfo->getPathname());
 
                 if ($splFileinfo->isDir()) {
-                    mkdir($newpath . "/" . $_path);
+                    mkdir($newpath."/".$_path);
                 } else {
-                    copy($fullPath, $newpath . "/" . $_path);
+                    copy($fullPath, $newpath."/".$_path);
                 }
             }
         } else {
@@ -419,7 +419,7 @@ class Filesystem
         if ($normalized['type'] === 'file') {
             $normalized['size'] = $file->getSize();
             $normalized['filename'] = $file->getFilename();
-            $normalized['basename'] = $file->getBasename('.' . $file->getExtension());
+            $normalized['basename'] = $file->getBasename('.'.$file->getExtension());
             $normalized['extension'] = $file->getExtension();
         }
 
