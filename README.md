@@ -2,10 +2,8 @@
 <a href="https://github.com/flextype-components/filesystem/releases">
 <img alt="undefined" src="https://img.shields.io/github/release/flextype-components/filesystem.svg?label=version">
 </a>
-<a href="https://github.com/filesystem/filesystem">
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
-</a>
 
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/filesystem/filesystem)
 [![Quality Score](https://img.shields.io/scrutinizer/g/flextype-components/filesystem.svg?branch=master)](https://scrutinizer-ci.com/g/flextype-components/filesystem?branch=master)
 
 
