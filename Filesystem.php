@@ -395,7 +395,7 @@ class Filesystem
     /**
      * Normalize the file info.
      *
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return array|void
      */
     protected static function normalizeFileInfo(\SplFileInfo $file)
@@ -433,7 +433,7 @@ class Filesystem
     /**
      * Get the normalized path from a SplFileInfo object.
      *
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return string
      */
     protected static function getFilePath(\SplFileInfo $file)
@@ -446,7 +446,7 @@ class Filesystem
     /**
      * @param string $path
      * @param int    $mode
-     * @return RecursiveIteratorIterator
+     * @return \RecursiveIteratorIterator
      */
     protected static function getRecursiveDirectoryIterator($path, $mode = \RecursiveIteratorIterator::SELF_FIRST)
     {
@@ -458,7 +458,7 @@ class Filesystem
 
     /**
      * @param string $path
-     * @return DirectoryIterator
+     * @return \DirectoryIterator
      */
     protected static function getDirectoryIterator($path)
     {
