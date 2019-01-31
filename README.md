@@ -1,6 +1,8 @@
-# Filesystem Component
-![version](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/flextype-components/filesystem/blob/master/LICENSE)
+<p align="center">
+<h1>Filesystem Component</h1>
+<a href="https://github.com/flextype-componets/filesystem/releases"><img alt="undefined" src="https://img.shields.io/github/release/filesystem/filesystem.svg?label=version"></a>
+  <a href="https://github.com/filesystem/filesystem"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>     
+</p>
 
 Filesystem component contains methods that assist in working with files and directories.
 
