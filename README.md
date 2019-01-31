@@ -1,5 +1,4 @@
 <h1>Filesystem Component</h1>
-<p>
 <a href="https://github.com/flextype-components/filesystem/releases">
 <img alt="undefined" src="https://img.shields.io/github/release/flextype-components/filesystem.svg?label=version">
 </a>
@@ -10,7 +9,6 @@
 <img src="https://scrutinizer-ci.com/g/flextype-components/filesystem/badges/quality-score.png?b=master">
 </a>
 [![Quality Score](https://img.shields.io/scrutinizer/g/flextype-components/filesystem.svg)](https://scrutinizer-ci.com/g/flextype-components/filesystem)
-</p>
 
 Filesystem component contains methods that assist in working with files and directories.
 
