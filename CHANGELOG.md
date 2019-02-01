@@ -1,3 +1,6 @@
+# v2.0.1, 2019-02-01
+* typo fixes.
+
 # v2.0.0, 2019-02-01
 * Total code cleanup and refactoring!
 
