@@ -1,3 +1,6 @@
+# v2.0.0, 2019-02-01
+* Total code cleanup and refactoring!
+
 # v1.1.5, 2018-12-23
 * recursiveCopy fixes
 
