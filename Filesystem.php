@@ -440,7 +440,9 @@ class Filesystem
     {
         $path = $file->getPathname();
 
-        return trim(str_replace('\\', '/', $path), '/');
+        $path = trim(str_replace('\\', '/', $path));
+
+        return $path;
     }
 
     /**
