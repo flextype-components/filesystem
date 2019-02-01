@@ -281,7 +281,7 @@ class Filesystem
      * @param array  $visibility  Visibility
      * @return bool True on success, false on failure.
      */
-    public function createDir($dirname, $visibility = 'public')
+    public static function createDir($dirname, $visibility = 'public')
     {
         $umask = umask(0);
 
@@ -339,7 +339,7 @@ class Filesystem
      * @param string $newpath The new path of the file.
      * @return bool True on success, false on failure.
      */
-    public function rename($path, $newpath)
+    public static function rename($path, $newpath)
     {
         return rename($path, $newpath);
     }
