@@ -1,3 +1,6 @@
+# v2.0.2, 2019-02-02
+* all methods params types - fixed.
+
 # v2.0.1, 2019-02-01
 * typo fixes.
 

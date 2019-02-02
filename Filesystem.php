@@ -107,7 +107,7 @@ class Filesystem
      * @param bool   $recursive Whether to list recursively.
      * @return array A list of file metadata.
      */
-    public static function listContents($directory = '', $recursive = false)
+    public static function listContents(string $directory = '', bool $recursive = false)
     {
         $result = [];
 
@@ -170,7 +170,7 @@ class Filesystem
      * @param string $path The path to the file.
      * @return string|false The timestamp or false on failure.
      */
-    public static function getTimestamp($path)
+    public static function getTimestamp(string $path)
     {
         return Filesystem::getMetadata($path)['timestamp'];
     }
@@ -181,7 +181,7 @@ class Filesystem
      * @param string $path The path to the file.
      * @return int|false The file size or false on failure.
      */
-    public static function getSize($path)
+    public static function getSize(string $path)
     {
         return Filesystem::getMetadata($path)['size'];
     }
@@ -192,7 +192,7 @@ class Filesystem
      * @param string $path The path to the file.
      * @return array|false The file metadata or false on failure.
      */
-    public static function getMetadata($path)
+    public static function getMetadata(string $path)
     {
         $info = new \SplFileInfo($path);
 
@@ -205,7 +205,7 @@ class Filesystem
      * @param string $path The path to the file.
      * @return string|false The visibility (public|private) or false on failure.
      */
-    public static function getVisibility($path)
+    public static function getVisibility(string $path)
     {
         clearstatcache(false, $path);
         $permissions = octdec(substr(sprintf('%o', fileperms($path)), -4));
@@ -221,7 +221,7 @@ class Filesystem
      * @param string $visibility One of 'public' or 'private'.
      * @return bool True on success, false on failure.
      */
-    public static function setVisibility($path, $visibility)
+    public static function setVisibility(string $path, string $visibility)
     {
         $type = is_dir($path) ? 'dir' : 'file';
         $success = chmod($path, Filesystem::$permissions[$type][$visibility]);
@@ -239,7 +239,7 @@ class Filesystem
      * @param string $path
      * @return bool True on success, false on failure.
      */
-    public static function delete($path)
+    public static function delete(string $path)
     {
         return @unlink($path);
     }
@@ -250,7 +250,7 @@ class Filesystem
      * @param string $dirname
      * @return bool True on success, false on failure.
      */
-    public static function deleteDir($dirname)
+    public static function deleteDir(string $dirname)
     {
         if (!is_dir($dirname)) {
             return false;
@@ -278,10 +278,10 @@ class Filesystem
      * Create a directory.
      *
      * @param string $dirname     The name of the new directory.
-     * @param array  $visibility  Visibility
+     * @param string  $visibility  Visibility
      * @return bool True on success, false on failure.
      */
-    public static function createDir($dirname, $visibility = 'public')
+    public static function createDir(string $dirname, string $visibility = 'public')
     {
         $umask = umask(0);
 
@@ -299,10 +299,10 @@ class Filesystem
      *
      * @param string $path       Path to the existing file.
      * @param string $newpath    The new path of the file.
-     * @param string $recursive  Recursive copy files.
+     * @param bool   $recursive  Recursive copy files.
      * @return bool True on success, false on failure.
      */
-    public static function copy($path, $newpath, $recursive = false)
+    public static function copy(string $path, string $newpath, bool $recursive = false)
     {
         if ($recursive) {
 
@@ -339,7 +339,7 @@ class Filesystem
      * @param string $newpath The new path of the file.
      * @return bool True on success, false on failure.
      */
-    public static function rename($path, $newpath)
+    public static function rename(string $path, string $newpath)
     {
         return rename($path, $newpath);
     }
@@ -353,7 +353,7 @@ class Filesystem
      * @param int     $flags          Flags
      * @return bool True on success, false on failure.
      */
-    public static function write($path, $contents, $visibility = 'public', $flags = LOCK_EX)
+    public static function write(string $path, string $contents, string $visibility = 'public', int $flags = LOCK_EX)
     {
         if (file_put_contents($path, $contents, $flags) === false) {
             return false;
@@ -370,7 +370,7 @@ class Filesystem
      * @param string $path
      * @return bool
      */
-    public static function has($path)
+    public static function has(string $path)
     {
         return file_exists($path);
     }
@@ -450,7 +450,7 @@ class Filesystem
      * @param int    $mode
      * @return \RecursiveIteratorIterator
      */
-    protected static function getRecursiveDirectoryIterator($path, $mode = \RecursiveIteratorIterator::SELF_FIRST)
+    protected static function getRecursiveDirectoryIterator(string $path, int $mode = \RecursiveIteratorIterator::SELF_FIRST)
     {
         return new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
@@ -462,7 +462,7 @@ class Filesystem
      * @param string $path
      * @return \DirectoryIterator
      */
-    protected static function getDirectoryIterator($path)
+    protected static function getDirectoryIterator(string $path)
     {
         $iterator = new \DirectoryIterator($path);
 
