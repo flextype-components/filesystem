@@ -1,3 +1,6 @@
+# v2.0.3, 2019-02-18
+* deleteDir() method return type - fixed.
+
 # v2.0.2, 2019-02-02
 * all methods params types - fixed.
 

@@ -250,29 +250,31 @@ class Filesystem
      * @param string $dirname
      * @return bool True on success, false on failure.
      */
-    public static function deleteDir(string $dirname)
-    {
-        if (!is_dir($dirname)) {
-            return false;
-        }
+     public static function deleteDir(string $dirname) : bool
+     {
+         if (!is_dir($dirname)) {
+             return false;
+         }
 
-        // Delete dir
-        if (is_dir($dirname)) {
-            $ob = scandir($dirname);
-            foreach ($ob as $o) {
-                if ($o != '.' && $o != '..') {
-                    if (filetype($dirname.'/'.$o) == 'dir') {
-                        Filesystem::deleteDir($dirname.'/'.$o);
-                    } else {
-                        unlink($dirname.'/'.$o);
-                    }
-                }
-            }
-        }
+         // Delete dir
+         if (is_dir($dirname)) {
+             $ob = scandir($dirname);
+             foreach ($ob as $o) {
+                 if ($o != '.' && $o != '..') {
+                     if (filetype($dirname.'/'.$o) == 'dir') {
+                         Filesystem::deleteDir($dirname.'/'.$o);
+                     } else {
+                         unlink($dirname.'/'.$o);
+                     }
+                 }
+             }
+         }
 
-        reset($ob);
-        rmdir($dirname);
-    }
+         reset($ob);
+         rmdir($dirname);
+
+         return true;
+     }
 
     /**
      * Create a directory.
