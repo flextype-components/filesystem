@@ -358,7 +358,7 @@ class Filesystem
      *
      * @return bool True on success, false on failure.
      */
-    public static function copy(string $path, string $newpath, bool $recursive = false) : bool
+    public static function copy(string $path, string $newpath, bool $recursive = false)
     {
         if (! $recursive) {
             return copy($path, $newpath);
