@@ -1,3 +1,6 @@
+# v2.0.8, 2020-08-21
+* improve mime type list
+
 # v2.0.7, 2020-07-24
 * improve delete() and deleteDir() methods.
 
